@@ -1,7 +1,4 @@
 const mongoose = require('mongoose');
-require('dotenv').config();
-const MONGODB_URI = process.env.MONGODB_URI;
-mongoose.connect(MONGODB_URI)
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.ObjectId;
@@ -24,7 +21,7 @@ const courseSchema = new Schema({
     title: String,
     description: String,
     price: Number,
-    image: String,
+    imageUrl: String,
     adminId: ObjectId
 })
 

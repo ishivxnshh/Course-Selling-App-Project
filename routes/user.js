@@ -1,9 +1,8 @@
 const { Router } = require('express');
 const userRouter = Router();
 const { userModel } = require('../db');
-require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
+const  { JWT_USER_PASSWORD } = require("../config");
 const zod = require('zod');
 const bcrypt = require('bcrypt');
 

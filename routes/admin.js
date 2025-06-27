@@ -1,11 +1,11 @@
 const { Router } = require('express');
 const adminRouter = Router();
-const { adminModel } = require("../db");
-require('dotenv').config();
+const { adminModel, courseModel } = require("../db");
 const jwt = require('jsonwebtoken');
-const JWT_SECRET = process.env.JWT_SECRET;
+const  { JWT_ADMIN_PASSWORD } = require("../config");
 const zod = require('zod');
 const bcrypt = require('bcrypt');
+const adminMiddleware = require("../middlewares/admin");
 
 adminRouter.post("/signup", async function (req, res) {
 
@@ -52,6 +52,7 @@ adminRouter.post("/signup", async function (req, res) {
 })
 
 adminRouter.post("/login", async function (req, res) {
+
     const requiredBodySchema = zod.object({
         email: zod.string().email(),
         password: zod.string().min(6),
@@ -94,12 +95,29 @@ adminRouter.post("/login", async function (req, res) {
     }
 })
 
-adminRouter.post("/course", function (req, res) {
-    res.json({ message: "Course created successfully" });
+adminRouter.post("/course", adminMiddleware, async function (req, res) {
+    
+    const adminId = req.adminId;
+
+    const { title, desription, price, imageUrl } = req.body;
+
+    await courseModel.create({
+        title: title,
+        description: desription,
+        price: price,
+        imageUrl: imageUrl,
+        adminId: adminId        
+    });
+
+    res.json({
+        message: "Course created successfully",
+        courseId: course._id
+    });
 });
 
 adminRouter.put("/course", function (req, res) {
-    res.json({ message: "Course updated successfully" });
+    
+    
 });
 
 adminRouter.get("/course/bulk", function (req, res) {
