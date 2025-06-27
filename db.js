@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://admin:admin12345@cluster0.m7sfi.mongodb.net/coursera-app")
+require('dotenv').config();
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect(MONGODB_URI)
 
 const Schema = mongoose.Schema;
 const ObjectId = mongoose.ObjectId;
