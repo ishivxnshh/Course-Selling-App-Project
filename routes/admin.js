@@ -2,7 +2,7 @@ const { Router } = require('express');
 const adminRouter = Router();
 const { adminModel, courseModel } = require("../db");
 const jwt = require('jsonwebtoken');
-const  { JWT_ADMIN_PASSWORD } = require("../config");
+const { JWT_ADMIN_PASSWORD } = require("../config");
 const zod = require('zod');
 const bcrypt = require('bcrypt');
 const adminMiddleware = require("../middlewares/admin");
@@ -96,7 +96,7 @@ adminRouter.post("/login", async function (req, res) {
 })
 
 adminRouter.post("/course", adminMiddleware, async function (req, res) {
-    
+
     const adminId = req.adminId;
 
     const { title, desription, price, imageUrl } = req.body;
@@ -106,7 +106,7 @@ adminRouter.post("/course", adminMiddleware, async function (req, res) {
         description: desription,
         price: price,
         imageUrl: imageUrl,
-        adminId: adminId        
+        adminId: adminId
     });
 
     res.json({
@@ -115,13 +115,41 @@ adminRouter.post("/course", adminMiddleware, async function (req, res) {
     });
 });
 
-adminRouter.put("/course", function (req, res) {
-    
-    
+adminRouter.put("/course", adminMiddleware, async function (req, res) {
+
+    const adminId = req.adminId;
+
+    const { title, desription, price, imageUrl, courseId } = req.body;
+
+    const course = await courseModel.updateOne({
+        _id: courseId,
+        adminId: adminId
+    }, {
+        title: title,
+        description: desription,
+        price: price,
+        imageUrl: imageUrl,
+        adminId: adminId
+    });
+
+    res.json({
+        message: "Course updated successfully",
+        courseId: course._id
+    });
 });
 
-adminRouter.get("/course/bulk", function (req, res) {
-    res.json({ message: "Bulk course retrieval route" });
+adminRouter.get("/course/bulk", async function (req, res) {
+    
+    const adminId = req.adminId;
+
+    const courses = await courseModel.find({
+        adminId: adminId
+    });
+
+    res.json({
+        message: "Courses fetched successfully",
+        courses: courses
+    });
 });
 
 module.exports = {
