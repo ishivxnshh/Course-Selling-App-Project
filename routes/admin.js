@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const { JWT_ADMIN_PASSWORD } = require("../config");
 const zod = require('zod');
 const bcrypt = require('bcrypt');
-const adminMiddleware = require("../middlewares/admin");
+const { adminMiddleware } = require("../middlewares/admin");
 
 adminRouter.post("/signup", async function (req, res) {
 
