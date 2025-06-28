@@ -82,7 +82,7 @@ adminRouter.post("/login", async function (req, res) {
     if (passwordMatch) {
         const token = jwt.sign(
             { id: admin._id.toString() },
-            JWT_SECRET
+            JWT_ADMIN_PASSWORD
         );
 
         res.json({
@@ -110,8 +110,7 @@ adminRouter.post("/course", adminMiddleware, async function (req, res) {
     });
 
     res.json({
-        message: "Course created successfully",
-        courseId: course._id
+        message: "Course created successfully"
     });
 });
 
@@ -133,15 +132,13 @@ adminRouter.put("/course", adminMiddleware, async function (req, res) {
     });
 
     res.json({
-        message: "Course updated successfully",
-        courseId: course._id
+        message: "Course updated successfully"
     });
 });
 
-adminRouter.get("/course/bulk", async function (req, res) {
+adminRouter.get("/course/bulk", adminMiddleware, async function (req, res) {
     
     const adminId = req.adminId;
-
     const courses = await courseModel.find({
         adminId: adminId
     });
