@@ -10,15 +10,31 @@ const { courseRouter } = require("./routes/course");
 const app = express();
 app.use(express.json());
 
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        message: "Server is healthy"
+    });
+});
+
+// Route Mounting
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/course", courseRouter);
 
 async function main() {
-    await mongoose.connect(MONGODB_URI);
-    app.listen(PORT, function () {
-        console.log(`Server is running on http://localhost:${PORT}`);
-    });
+    try {
+        console.log("Connecting to MongoDB...");
+        await mongoose.connect(MONGODB_URI);
+        console.log("Connected Successfully!!")
+        app.listen(PORT, () => {
+            console.log(`Server is running on https://localhost:${PORT}`)
+        })
+    }
+    catch(error) {
+        console.error("MongoDB connection FAILED!!")
+        console.error(error.message);
+        process.exit(1);
+    }
 }
 
 main();
