@@ -1,4 +1,4 @@
-
+import { Link } from 'react-router-dom'
 
 const Home = () => {
   return (
@@ -10,9 +10,12 @@ const Home = () => {
         <p className="text-gray-300 mb-6">
           High quality courses from industry experts.
         </p>
-        <button className="bg-blue-500 px-6 py-3 rounded hover:bg-blue-600">
+        <Link 
+          to='/courses' 
+          className="bg-blue-500 px-6 py-3 rounded hover:bg-blue-600"
+        >
           Browse Courses
-        </button>
+        </Link>
       </div>
     </div>
   )

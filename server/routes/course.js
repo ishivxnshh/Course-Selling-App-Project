@@ -1,12 +1,29 @@
 const { Router } = require('express');
-const { userMiddleware } = require("../middlewares/user");
+const { authMiddleware } = require("../middlewares/auth");
 const { purchaseModel, courseModel } = require('../db');
 const courseRouter = Router();
 
-courseRouter.post("/purchase", userMiddleware, async function (req, res) {
+courseRouter.post("/purchase", authMiddleware, async function (req, res) {
 
-    const userId = req.userId;
+    if (req.user.role !== "user") {
+        return res.status(403).json({
+            message: "Only users can purchase courses"
+        });
+    }
+
+    const userId = req.user.id;
     const courseId = req.body.courseId;
+
+    const existingPurchase = await purchaseModel.findOne({
+        userId: userId,
+        courseId: courseId
+    })
+
+    if (existingPurchase) {
+        return res.status(400).json({
+            message: "Course already purchased"
+        });
+    }
 
     await purchaseModel.create({
         userId: userId,
